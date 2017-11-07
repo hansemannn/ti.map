@@ -169,6 +169,12 @@ methods:
     since: "3.2.3"
     platforms: [android]
 
+  - name: visibleMapRect
+    summary: Applies a padding (top/right/bottom/left) to the map.
+    since: "7.0.0"
+    type: MapInsets    
+    platforms: [iphone, ipad]
+
   - name: animateCamera
     summary: Changes the camera used for determining the map's viewing parameters and animates the change.
     parameters:
@@ -878,3 +884,38 @@ properties:
 
 platforms: [iphone, ipad]
 since: "6.3.0"
+
+---
+name: MapInsets
+summary: The insets applied to the <Modules.Map.View.visibleMapRect> property.
+platforms: [iphone, ipad]
+since: "7.0.0"
+properties:
+  - name: animated
+    summary: A flag indicating whether the padding should be applied animated.
+    type: Number
+    default: false
+  - name: padding
+    summary: The padding applied to the map-rect.
+    type: MapInsetsPadding
+    default: { 0, 0, 0, 0 }
+
+---
+name: MapInsetsPadding
+summary: The padding applied to the <Modules.Map.View.padding> property.
+platforms: [iphone, ipad]
+since: "7.0.0"
+properties:
+  - name: top
+    type: Number
+    summary: The top padding.
+  - name: right
+    type: Number
+    summary: The right padding.
+  - name: bottom
+    type: Number
+    summary: The bottom padding.
+  - name: left
+    type: Number
+    summary: The left padding.
+    

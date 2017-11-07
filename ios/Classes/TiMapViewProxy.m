@@ -728,6 +728,16 @@
 }
 #endif
 
+- (void)setVisibleMapRect:(NSDictionary *)args
+{
+  MKMapView *map = [(TiMapView *)[self view] map];
+  
+  NSDictionary *padding = [args objectForKey:@"padding"];
+  NSNumber *animated = [args objectForKey:@"animated"];
+  
+  [[(TiMapView *)[self view] map] setVisibleMapRect:map.visibleMapRect edgePadding:[TiUtils contentInsets:padding] animated:[TiUtils boolValue:animated]];
+}
+
 #pragma mark Public APIs iOS 7
 
 - (TiMapCameraProxy *)camera
