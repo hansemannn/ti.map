@@ -9,6 +9,8 @@
 #import <MapKit/MapKit.h>
 #import "TiMapView.h"
 
+@class TiViewProxy;
+
 @interface TiMapCustomAnnotationView : MKAnnotationView <TiMapAnnotation> {
   @private
   NSString *lastHitName;

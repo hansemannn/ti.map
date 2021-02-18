@@ -6,6 +6,10 @@
  */
 package ti.map;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Message;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,11 +25,7 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
-
 import ti.map.AnnotationProxy.AnnotationDelegate;
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.Message;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -100,6 +100,8 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_SCROLL_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_ZOOM_ENABLED, true);
+		defaultValues.put(MapModule.PROPERTY_MIN_CLUSTER_SIZE, 4); // matches DefaultClusterRenderer's default:
+		// https://github.com/googlemaps/android-maps-utils/blob/master/library/src/main/java/com/google/maps/android/clustering/view/DefaultClusterRenderer.java#L108
 		preloadPolygons = new ArrayList<PolygonProxy>();
 		preloadPolylines = new ArrayList<PolylineProxy>();
 		preloadCircles = new ArrayList<CircleProxy>();
@@ -1101,7 +1103,6 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	@Kroll.method
 	public void addCircle(CircleProxy circle)
 	{
-
 		if (TiApplication.isUIThread()) {
 			handleAddCircle(circle);
 		} else {

@@ -6,11 +6,16 @@
  */
 
 #import <TitaniumKit/TitaniumKit.h>
+#import <MapKit/MapKit.h>
+
 #import "TiMapAnnotationProxy.h"
 #import "TiMapCameraProxy.h"
 #import "TiMapCircleProxy.h"
 #import "TiMapPolygonProxy.h"
 #import "TiMapPolylineProxy.h"
+
+@class TiMapAnnotationProxy;
+@class TiMapCameraProxy;
 
 @interface TiMapViewProxy : TiViewProxy {
   TiMapAnnotationProxy *selectedAnnotation; // Annotation to select on initial display
@@ -35,6 +40,7 @@
 
 - (TiMapAnnotationProxy *)annotationFromArg:(id)arg;
 - (TiMapCameraProxy *)camera;
+- (MKAnnotationView *)viewForAnnotationProxy:(TiMapAnnotationProxy *)annotationProxy;
 
 - (void)addAnnotation:(id)args;
 - (void)addAnnotations:(id)args;

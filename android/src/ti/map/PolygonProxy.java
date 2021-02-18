@@ -6,33 +6,26 @@
  */
 package ti.map;
 
+import android.os.Message;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.PolyUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
-
 import ti.map.Shape.IShape;
-import android.os.Message;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.maps.android.PolyUtil;
 
 @Kroll.proxy(name = "Polygon", creatableInModule = MapModule.class,
-			 propertyAccessors =
-				 {
-
-					 MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
-					 MapModule.PROPERTY_ZINDEX, MapModule.PROPERTY_POINTS, TiC.PROPERTY_TOUCH_ENABLED
-
-				 })
+			 propertyAccessors = { MapModule.PROPERTY_FILL_COLOR, MapModule.PROPERTY_STROKE_COLOR,
+								   MapModule.PROPERTY_STROKE_WIDTH, MapModule.PROPERTY_ZINDEX,
+								   MapModule.PROPERTY_POINTS, TiC.PROPERTY_TOUCH_ENABLED })
 public class PolygonProxy extends KrollProxy implements IShape
 {
 
@@ -267,10 +260,9 @@ public class PolygonProxy extends KrollProxy implements IShape
 		return clickable;
 	}
 
-	/*public List<? extends List<LatLng>> getHoles()
-	{
-		return polygon.getHoles();
-	}*/
+	/*
+	 * public List<? extends List<LatLng>> getHoles() { return polygon.getHoles(); }
+	 */
 
 	@Override
 	public void onPropertyChanged(String name, Object value)

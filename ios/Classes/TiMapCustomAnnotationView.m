@@ -6,6 +6,7 @@
  */
 
 #import "TiMapCustomAnnotationView.h"
+#import "TiMapAnnotationProxy.h"
 
 @implementation TiMapCustomAnnotationView
 

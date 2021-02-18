@@ -6,30 +6,27 @@
  */
 package ti.map;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.AsyncResult;
-import org.appcelerator.kroll.common.TiMessenger;
-import org.appcelerator.kroll.common.Log;
-import org.appcelerator.titanium.TiC;
-import org.appcelerator.titanium.util.TiConvert;
-
-import ti.map.Shape.IShape;
 import android.os.Message;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.Gap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.common.AsyncResult;
+import org.appcelerator.kroll.common.Log;
+import org.appcelerator.kroll.common.TiMessenger;
+import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.util.TiConvert;
+import ti.map.Shape.IShape;
 
 @Kroll.proxy(name = "Polyline", creatableInModule = MapModule.class,
 			 propertyAccessors = { MapModule.PROPERTY_STROKE_COLOR, MapModule.PROPERTY_STROKE_WIDTH,
@@ -52,11 +49,13 @@ public class PolylineProxy extends KrollProxy implements IShape
 	private static final int MSG_SET_ZINDEX = MSG_FIRST_ID + 503;
 	private static final int MSG_SET_TOUCH_ENABLED = MSG_FIRST_ID + 504;
 	private static final int MSG_SET_STROKE_PATTERN = MSG_FIRST_ID + 505;
-	private static final int MSG_SET_GEODESIC = MSG_FIRST_ID + 506;
+	private static final int MSG_SET_STROKE_JOINT = MSG_FIRST_ID + 506;
+    private static final int MSG_SET_GEODESIC = MSG_FIRST_ID + 507;
 
 	public static final String PROPERTY_STROKE_COLOR2 = "color";
 	public static final String PROPERTY_STROKE_WIDTH2 = "width";
 	public static final String PROPERTY_STROKE_PATTERN2 = "pattern";
+	public static final String PROPERTY_JOINT_TYPE = "jointType";
 
 	public static final String PROPERTY_ZINDEX = "zIndex";
 	public static final String PROPERTY_GEODESIC = "geodesic";
@@ -73,6 +72,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 	{
 		super();
 		clickable = true;
+		defaultValues.put(PROPERTY_JOINT_TYPE, MapModule.POLYLINE_JOINT_DEFAULT);
 	}
 
 	@Override
@@ -106,6 +106,13 @@ public class PolylineProxy extends KrollProxy implements IShape
 				result.setResult(null);
 				return true;
 			}
+			case MSG_SET_STROKE_JOINT: {
+				result = (AsyncResult) msg.obj;
+				int type = (Integer) result.getArg();
+				polyline.setJointType(type);
+				result.setResult(null);
+				return true;
+			}
 			case MSG_SET_ZINDEX: {
 				result = (AsyncResult) msg.obj;
 				polyline.setZIndex((Float) result.getArg());
@@ -129,14 +136,15 @@ public class PolylineProxy extends KrollProxy implements IShape
 			}
 		}
 	}
+
 	public void processOptions()
 	{
 
 		options = new PolylineOptions();
-		// (int) 	  strokeColor
-		// (float)	strokeWidth
-		// (int) 	  fillColor
-		// (float)	zIndex
+		// (int) strokeColor
+		// (float) strokeWidth
+		// (int) fillColor
+		// (float) zIndex
 
 		if (hasProperty(MapModule.PROPERTY_POINTS)) {
 			processPoints(getProperty(MapModule.PROPERTY_POINTS), false);
@@ -181,6 +189,10 @@ public class PolylineProxy extends KrollProxy implements IShape
 					processPatternDefinition(TiConvert.toInt(getProperty(PolylineProxy.PROPERTY_STROKE_PATTERN2))));
 			}
 		}
+
+		if (hasProperty(PolylineProxy.PROPERTY_JOINT_TYPE)) {
+			options.jointType(TiConvert.toInt(getProperty(PolylineProxy.PROPERTY_JOINT_TYPE), 0));
+		}
 	}
 
 	public void addLocation(Object loc, ArrayList<LatLng> locationArray, boolean list)
@@ -215,7 +227,7 @@ public class PolylineProxy extends KrollProxy implements IShape
 			return locationArray;
 		}
 
-		// Single point
+		// single point
 		addLocation(points, locationArray, list);
 		return locationArray;
 	}

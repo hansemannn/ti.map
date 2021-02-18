@@ -8,26 +8,25 @@
  */
 package ti.map;
 
-import org.appcelerator.kroll.KrollModule;
-import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.titanium.TiApplication;
-import org.appcelerator.titanium.util.TiConvert;
-import org.appcelerator.titanium.TiC;
-
-import com.google.maps.android.PolyUtil;
-
 import android.location.Location;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.maps.android.PolyUtil;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.appcelerator.kroll.KrollModule;
+import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.util.TiConvert;
+import org.appcelerator.titanium.TiC;
 
 @Kroll.module(name = "Map", id = "ti.map")
 public class MapModule extends KrollModule
@@ -83,6 +82,8 @@ public class MapModule extends KrollModule
 	public static final String PROPERTY_INDOOR_ENABLED = "indoorEnabled";
 	public static final String PROPERTY_PLACE_ID = "placeID";
 	public static final String PROPERTY_DESELECTED = "deselected";
+	public static final String PROPERTY_LITE_MODE = "liteMode";
+	public static final String PROPERTY_MIN_CLUSTER_SIZE = "minClusterSize";
 
 	@Kroll.constant
 	public static final int NORMAL_TYPE = GoogleMap.MAP_TYPE_NORMAL;
@@ -145,6 +146,12 @@ public class MapModule extends KrollModule
 	public static final int POLYLINE_PATTERN_DASHED = 0;
 	@Kroll.constant
 	public static final int POLYLINE_PATTERN_DOTTED = 1;
+	@Kroll.constant
+	public static final int POLYLINE_JOINT_DEFAULT = 0;
+	@Kroll.constant
+	public static final int POLYLINE_JOINT_BEVEL = 1;
+	@Kroll.constant
+	public static final int POLYLINE_JOINT_ROUND = 2;
 
 	public MapModule()
 	{

@@ -87,7 +87,7 @@
 - (void)applyStrokeColor
 {
   if (polylineRenderer != nil) {
-    [polylineRenderer setStrokeColor:strokeColor];
+    [polylineRenderer setStrokeColor:(strokeColor == nil ? [UIColor blackColor] : [strokeColor color])];
   }
 }
 
@@ -133,8 +133,9 @@
   if (strokeColor != nil) {
     RELEASE_TO_NIL(strokeColor);
   }
-  strokeColor = [[[TiUtils colorValue:value] _color] retain];
+  strokeColor = [[TiUtils colorValue:value] retain];
   [self applyStrokeColor];
+  [self replaceValue:value forKey:@"strokeColor" notification:NO];
 }
 
 - (void)setStrokeWidth:(id)value

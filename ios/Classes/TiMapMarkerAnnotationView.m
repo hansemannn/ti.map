@@ -5,6 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 #import "TiMapMarkerAnnotationView.h"
+#import "TiMapAnnotationProxy.h"
 #import "TiMapView.h"
 
 @implementation TiMapMarkerAnnotationView
