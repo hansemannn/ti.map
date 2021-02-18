@@ -10,6 +10,7 @@ description: External version of Map module
 author: Jeff Haynie, Jon Alter, Pedro Enrique, Hans Knöchel, Vijay Singh
 license: Apache Public License v2
 copyright: Copyright (c) 2013-present by Axway Appcelerator
+mac: false
 
 # these should not be edited
 name: map
