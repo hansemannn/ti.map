@@ -1419,7 +1419,7 @@ CLLocationCoordinate2D userNewLocation;
   return NO;
 }
 
-- (void)handlePolylineClick:(CGPoint)touchPoint
+- (BOOL)handlePolylineClick:(CGPoint)touchPoint
 {
   // Convert view touch point to its equivalent map coordinate.
   MKMapPoint mapTouchPoint = MKMapPointForCoordinate([self.map convertPoint:touchPoint toCoordinateFromView:self.map]);
