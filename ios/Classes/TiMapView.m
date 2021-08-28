@@ -130,9 +130,12 @@ CLLocationCoordinate2D userNewLocation;
   CLLocationCoordinate2D tapCoord = [self.map convertPoint:tapPoint toCoordinateFromView:self.map];
   MKMapPoint mapPoint = MKMapPointForCoordinate(tapCoord);
 
-  [self handlePolygonClick:mapPoint];
-  [self handlePolylineClick:mapPoint];
-  [self handleCircleClick:mapPoint];
+  if ([self handlePolygonClick:mapPoint]) { return; }
+  if ([self handlePolylineClick:mapPoint]) { return; }
+  if ([self handleCircleClick:mapPoint]) { return; }
+
+  // Only fire map click if no shape events have been fired
+  // to prevent duplicate events that have to be filtered out
   [self handleMapClick:mapPoint];
 }
 
@@ -1380,7 +1383,7 @@ CLLocationCoordinate2D userNewLocation;
   }
 }
 
-- (void)handlePolygonClick:(MKMapPoint)point
+- (BOOL)handlePolygonClick:(MKMapPoint)point
 {
   for (int i = 0; i < [polygonProxies count]; i++) {
     TiMapPolygonProxy *proxy = [polygonProxies objectAtIndex:i];
@@ -1391,11 +1394,14 @@ CLLocationCoordinate2D userNewLocation;
     BOOL inPolygon = CGPathContainsPoint(polygonRenderer.path, NULL, polygonViewPoint, NO);
     if (inPolygon && [TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES]) {
       [self fireShapeClickEvent:proxy point:point sourceType:@"polygon"];
+      return YES;
     }
   }
+
+  return NO;
 }
 
-- (void)handleCircleClick:(MKMapPoint)point
+- (BOOL)handleCircleClick:(MKMapPoint)point
 {
   for (int i = 0; i < [circleProxies count]; i++) {
     TiMapCircleProxy *circle = [circleProxies objectAtIndex:i];
@@ -1406,10 +1412,13 @@ CLLocationCoordinate2D userNewLocation;
     BOOL inCircle = CGPathContainsPoint(circRenderer.path, NULL, circleViewPoint, NO);
     if (inCircle && [TiUtils boolValue:[circle valueForKey:@"touchEnabled"] def:YES]) {
       [self fireShapeClickEvent:circle point:point sourceType:@"circle"];
+      return YES;
     }
   }
+
+  return NO;
 }
-- (void)handlePolylineClick:(MKMapPoint)point
+- (BOOL)handlePolylineClick:(MKMapPoint)point
 {
   for (int i = 0; i < [polylineProxies count]; i++) {
     TiMapPolylineProxy *proxy = [polylineProxies objectAtIndex:i];
@@ -1419,9 +1428,13 @@ CLLocationCoordinate2D userNewLocation;
     CGPoint polylineViewPoint = [polylineRenderer pointForMapPoint:point];
     BOOL onPolyline = CGPathContainsPoint(polylineRenderer.path, NULL, polylineViewPoint, NO);
     if (onPolyline && [TiUtils boolValue:[proxy valueForKey:@"touchEnabled"] def:YES]) {
+        NSLog(@"[WARN] Fire polyline click!")
       [self fireShapeClickEvent:proxy point:point sourceType:@"polyline"];
+      return YES;
     }
   }
+
+  return NO;
 }
 
 - (void)fireEvent:(NSString *)event withRegion:(MKCoordinateRegion)_region animated:(BOOL)animated
