@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Message;
 import android.util.Property;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -331,16 +332,18 @@ public class AnnotationProxy extends KrollProxy
 		IconGenerator mIconGenerator = new IconGenerator(context);
 		mIconGenerator.setBackground(iconDrawable);
 
-		int mDimension = (int) context.getResources().getDimension(R.dimen.pin_width);
+		if (title != null) {
+			int pinWidth = (int) context.getResources().getDimension(R.dimen.pin_width);
+			TextView label = new TextView(context);
 
-		TextView label = new TextView(context);
-		label.setTextColor(textColor);
-		label.setGravity(Gravity.CENTER_HORIZONTAL);
+			label.setTextColor(textColor);
+			label.setGravity(Gravity.CENTER_HORIZONTAL);
+			label.setText(title);
+			label.setLayoutParams(new ViewGroup.LayoutParams(pinWidth, pinWidth));
 
-		label.setText(title);
-		label.setLayoutParams(new ViewGroup.LayoutParams(mDimension, mDimension));
+			mIconGenerator.setContentView(label);
+		}
 
-		mIconGenerator.setContentView(label);
 		Bitmap icon = mIconGenerator.makeIcon();
 
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
