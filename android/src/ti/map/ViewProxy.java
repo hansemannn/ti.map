@@ -98,6 +98,7 @@ public class ViewProxy extends TiViewProxy implements AnnotationDelegate
 	{
 		super();
 		preloadRoutes = new ArrayList<RouteProxy>();
+		defaultValues.put(TiC.PROPERTY_ACCESSIBILITY_HIDDEN, true);
 		defaultValues.put(MapModule.PROPERTY_COMPASS_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_SCROLL_ENABLED, true);
 		defaultValues.put(MapModule.PROPERTY_ZOOM_ENABLED, true);

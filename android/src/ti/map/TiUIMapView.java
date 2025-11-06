@@ -16,13 +16,14 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Build;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,16 +55,13 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
-import org.appcelerator.titanium.TiBaseActivity;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.util.TiRHelper;
-import org.appcelerator.titanium.view.TiUIFragment;
 import org.appcelerator.titanium.view.TiUIView;
-import org.appcelerator.titanium.TiLifecycle.OnLifecycleEvent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,7 +118,8 @@ public class TiUIMapView extends TiUIView
 			var inflater = activity.getLayoutInflater();
 			var view = inflater.inflate(TiRHelper.getResource(rawMap ? "layout.ti_map_raw" : "layout.ti_map"), null);
 			if (rawMap) {
-				mapView = (MapView) view;
+				mapView = view.findViewById(TiRHelper.getResource("id.lite_raw_map"));
+				handleAccessibility();
 			}
 			setNativeView(view);
 		} catch (TiRHelper.ResourceNotFoundException e) {
@@ -152,7 +151,44 @@ public class TiUIMapView extends TiUIView
 						.commit();
 			}
 
+			handleAccessibility();
 			mapFragment.getMapAsync(this);
+		}
+	}
+
+
+	/**
+     * Crash fix: https://issuetracker.google.com/u/1/issues/457601635
+     *
+	 * Note: Though we already disable the accessibility in module's layout XML file,
+     * this will guard us against any hidden accessibility modifications at run time.
+     */
+	private void handleAccessibility() {
+		try {
+			if (mapView != null) {
+				mapView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+
+				// Disable for parent also.
+				ViewParent viewParent = mapView.getParent();
+				if (viewParent != null) {
+					((View) viewParent).setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+				}
+			}
+
+			if (mapFragment != null) {
+				View fragmentView = mapFragment.getView();
+				if (fragmentView != null) {
+					fragmentView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+
+					// Disable for parent also.
+					ViewParent viewParent = fragmentView.getParent();
+					if (viewParent != null) {
+						((View) viewParent).setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+					}
+				}
+			}
+		} catch (Exception e) {
+			Log.d("TiUIMapView", "Failed to update the accessibility: " + e.getMessage());
 		}
 	}
 
@@ -234,6 +270,7 @@ public class TiUIMapView extends TiUIView
 			return;
 		}
 
+		handleAccessibility();
 		MapsInitializer.initialize(proxy.getActivity().getApplicationContext());
 
 		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
